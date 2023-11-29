@@ -1,5 +1,6 @@
 #pragma once
 #include"Tree.h"
+#include <fstream>
 class DOS
 {
 private:
@@ -372,7 +373,9 @@ public:
 			
 
 		}
-
+		else if (opr == "save") {
+			saveToFile(command);
+			}
 		else if (opr == "help")
 		{
 			cout << "mkdir\tMakes a new directory in current directory" << endl;
@@ -395,6 +398,48 @@ public:
 			
 		}*/
 		return false;
+	}
+	void saveToFile(const string& command)
+	{
+		// Extract the file name from the command
+		size_t spaceIndex = command.find(' ');
+		if (spaceIndex !=string::npos && spaceIndex + 1 < command.length()) {
+			string fileName = command.substr(spaceIndex + 1);
+
+			// Find the file based on name
+			file* f = tree.Find_file(fileName);
+
+			if (f)
+			{
+				// Create a text file with the same name as the file
+				ofstream outFile(fileName + ".txt");
+
+				// Check if the file is successfully opened
+				if (outFile.is_open())
+				{
+					// Write the file data to the text file
+					outFile << f->data;
+
+					// Close the text file
+					outFile.close();
+
+					cout << "Data saved to file: " << fileName + ".txt" << endl;
+				}
+				else
+				{
+					cout << "Error opening the text file for writing." << endl;
+				}
+			}
+			else 
+			{
+				
+				cout << "File not found: " << fileName << endl;
+			}
+		}
+		else 
+		{
+			cout << "Invalid command format. Usage: save <file_name>" << endl;
+		}
 	}
 		
 
